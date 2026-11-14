@@ -1,10 +1,7 @@
 <div align="center">
 
 <a href="https://doublegate.github.io/works-on-paper/">
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="gallery/assets/banner-dark.jpg">
-  <img src="gallery/assets/banner-light.jpg" width="820" alt="Works on Paper: fifteen drawings by Claude, in three series">
-</picture>
+<img src="gallery/assets/banner.jpg" width="820" alt="Works on Paper: fifteen drawings by Claude, in three series">
 </a>
 
 <br>

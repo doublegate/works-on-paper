@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Works on Paper: drawings by Claude</title>
 <meta name="description" content="Fifteen drawings by Claude, made with p5.brush, in three series.">
-<meta name="color-scheme" content="light dark">
-<script>try{var t=localStorage.getItem("wop-theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}</script>
+<meta name="color-scheme" content="light">
+<script>try{var t=localStorage.getItem("wop-theme");if(t==="auto"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}</script>
 <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2212%22%20fill%3D%22%23f4efe6%22%2F%3E%3Cpath%20d%3D%22M14%2040c4-16%2022-26%2032-18%208%207-2%2022-14%2020-9-1-10-12-2-16%22%20fill%3D%22none%22%20stroke%3D%22%23a9563a%22%20stroke-width%3D%225%22%20stroke-linecap%3D%22round%22%2F%3E%3C%2Fsvg%3E">
 <link rel="canonical" href="https://doublegate.github.io/works-on-paper/">
 <meta property="og:type" content="website">
@@ -20,15 +20,14 @@
 <style>
 :root{--paper:#f4efe6;--wall:#ebe4d6;--ink:#23272e;--soft:#4a4f58;--muted:#7a7164;--accent:#a9563a;--mat:#fffdf8;--line:#ddd3c2;
 --serif:"Iowan Old Style","Palatino Linotype","Book Antiqua",Palatino,"URW Palladio L",P052,Georgia,ui-serif,serif;
---sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;color-scheme:light dark}
-@media (prefers-color-scheme:dark){:root{--paper:#16171a;--wall:#0f1012;--ink:#ece6da;--soft:#cfc8bb;--muted:#9c9384;--accent:#e08a66;--line:#2b2c31}}
+--sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;color-scheme:light}
 .theme{display:none}
 @supports (color:light-dark(#000,#fff)){
 :root{--paper:light-dark(#f4efe6,#16171a);--wall:light-dark(#ebe4d6,#0f1012);--ink:light-dark(#23272e,#ece6da);--soft:light-dark(#4a4f58,#cfc8bb);
 --muted:light-dark(#7a7164,#9c9384);--accent:light-dark(#a9563a,#e08a66);--line:light-dark(#ddd3c2,#2b2c31)}
-:root[data-theme=light],:root:has(.theme input[value=light]:checked){color-scheme:light}
+:root[data-theme=auto],:root:has(.theme input[value=auto]:checked){color-scheme:light dark}
 :root[data-theme=dark],:root:has(.theme input[value=dark]:checked){color-scheme:dark}
-:root:has(.theme input[value=auto]:checked){color-scheme:light dark}
+:root:has(.theme input[value=light]:checked){color-scheme:light}
 .theme{display:inline-flex}}
 .theme{position:absolute;top:clamp(14px,2.6vw,26px);right:clamp(18px,4vw,44px);z-index:1;margin:0;padding:3px;border:1px solid var(--line);border-radius:999px;gap:2px;background:color-mix(in srgb,var(--paper) 80%,transparent)}
 .theme legend{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
@@ -95,6 +94,8 @@ dialog.viewer:not([open]){opacity:0}
 dialog.viewer[open]{display:grid;grid-template-columns:minmax(0,1fr) min(440px,38vw)}
 .stage{display:flex;align-items:center;justify-content:center;padding:clamp(18px,4vw,56px);min-height:0}
 .stage .mount{padding:clamp(10px,1.4vw,18px);max-height:100%;display:flex}
+.stage .zoom{display:flex;cursor:zoom-in}
+.full-link{margin:14px 0 0;font:500 13px/1 var(--sans);letter-spacing:.04em}.full-link a{text-decoration:none;border-bottom:1px solid var(--line);padding-bottom:4px}
 .stage img{max-width:100%;max-height:calc(100dvh - 2*clamp(18px,4vw,56px) - 2*clamp(10px,1.4vw,18px));width:auto;height:auto;object-fit:contain}
 .panel{overflow:hidden;min-height:0;max-height:100dvh;padding:clamp(28px,4vw,56px) clamp(22px,3vw,44px);border-left:1px solid var(--line);background:color-mix(in srgb,var(--paper) 88%,transparent);display:flex;flex-direction:column}
 .panel h3{font:400 clamp(30px,3vw,40px)/1.1 var(--serif);margin:4px 0 22px}
@@ -116,7 +117,7 @@ dialog.viewer[open]{display:grid;grid-template-columns:minmax(0,1fr) min(440px,3
 </style>
 </head>
 <body>
-<fieldset class="theme"><legend>Colour theme</legend><label><input type="radio" name="theme" value="auto" checked><span>Auto</span></label><label><input type="radio" name="theme" value="light"><span>Light</span></label><label><input type="radio" name="theme" value="dark"><span>Dark</span></label></fieldset>
+<fieldset class="theme"><legend>Colour theme</legend><label><input type="radio" name="theme" value="auto"><span>Auto</span></label><label><input type="radio" name="theme" value="light" checked><span>Light</span></label><label><input type="radio" name="theme" value="dark"><span>Dark</span></label></fieldset>
 <div class="wrap">
 <header class="hero">
 <p class="eyebrow">A gallery · p5.brush · 2026</p>
@@ -214,6 +215,7 @@ please share them with credit, unaltered and non-commercially. <a href="https://
 <h3></h3>
 <div class="stmt"></div>
 <dl class="facts"><dt>Seed</dt><dd class="seed"></dd><dt>Medium</dt><dd>p5.brush: pencil, charcoal, ink and watercolour, rendered on a GPU</dd><dt>Artist</dt><dd>Claude</dd></dl>
+<p class="full-link"><a class="full" target="_blank" rel="noopener">Open full size ↗</a></p>
 <div class="controls"><button class="prev" aria-label="Previous work">← Previous</button><button class="next" aria-label="Next work">Next →</button><span class="pos"></span></div>
 </aside>
 </dialog>
@@ -223,11 +225,11 @@ please share them with credit, unaltered and non-commercially. <a href="https://
   // Theme: the radios restyle the page through CSS :has(); this only syncs them with, and remembers, the choice.
   const root = document.documentElement;
   for (const r of document.querySelectorAll(".theme input")) {
-    r.checked = r.value === (root.dataset.theme || "auto");
+    r.checked = r.value === (root.dataset.theme || "light");
     r.addEventListener("change", () => {
-      if (r.value === "auto") delete root.dataset.theme;
+      if (r.value === "light") delete root.dataset.theme;
       else root.dataset.theme = r.value;
-      try { r.value === "auto" ? localStorage.removeItem("wop-theme") : localStorage.setItem("wop-theme", r.value); } catch {}
+      try { r.value === "light" ? localStorage.removeItem("wop-theme") : localStorage.setItem("wop-theme", r.value); } catch {}
     });
   }
 })();
@@ -239,7 +241,14 @@ please share them with credit, unaltered and non-commercially. <a href="https://
   // The viewer's image element is created here, so the page never ships an image tag without a source.
   const img = document.createElement("img");
   img.decoding = "async";
-  $(".stage .mount").append(img);
+  // The drawing itself is a link to the full-size image, opened in its own tab.
+  const zoom = document.createElement("a");
+  zoom.className = "zoom";
+  zoom.target = "_blank";
+  zoom.rel = "noopener";
+  zoom.title = "Open full size in a new tab";
+  zoom.append(img);
+  $(".stage .mount").append(zoom);
   let cur = -1;
 
   function fill(i) {
@@ -271,6 +280,9 @@ please share them with credit, unaltered and non-commercially. <a href="https://
     if ($(".cmd")) $(".cmd").textContent = $(".cmd").dataset.prefix + w.source;
     $(".pos").textContent = i + 1 + " / " + works.length;
     img.alt = w.title;
+    zoom.href = w.image;
+    zoom.setAttribute("aria-label", w.title + ": open full size in a new tab");
+    $(".full").href = w.image;
     // Show the thumbnail at once, then swap in the full image when it has decoded.
     img.src = w.thumb;
     if (w.image !== w.thumb) {
