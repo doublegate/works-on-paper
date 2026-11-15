@@ -65,7 +65,7 @@ section.series .intro p{margin:0 0 10px}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:clamp(22px,3vw,40px) clamp(18px,2.6vw,34px);margin-top:34px;align-items:start}
 @media (min-width:1100px){.grid.five{grid-template-columns:repeat(5,minmax(0,1fr))}}
 .card{display:block;text-decoration:none;color:inherit;cursor:zoom-in;border:0;background:none;padding:0;text-align:left;font:inherit}
-.mount{background:var(--mat);padding:12px;border-radius:2px;box-shadow:0 1px 1px var(--shade-1),0 12px 28px -16px var(--shade-2);transition:transform .35s cubic-bezier(.2,.7,.2,1),box-shadow .35s}
+.mount{background:var(--mat);padding:4.95%;border-radius:2px;box-shadow:0 1px 1px var(--shade-1),0 12px 28px -16px var(--shade-2);transition:transform .35s cubic-bezier(.2,.7,.2,1),box-shadow .35s}
 .mount img{display:block;width:100%;height:auto;background:var(--mat);box-shadow:0 0 0 1px rgba(60,45,30,.09)}
 .card:hover .mount,.card:focus-visible .mount{transform:translateY(-4px);box-shadow:0 1px 1px var(--shade-1),0 22px 40px -18px var(--shade-3)}
 .card:focus-visible{outline:2px solid var(--accent);outline-offset:6px}
@@ -97,12 +97,12 @@ dialog.viewer::backdrop{background:rgba(10,10,12,.55)}
 dialog.viewer{opacity:1;transition:opacity .28s ease,overlay .28s allow-discrete,display .28s;transition-behavior:allow-discrete}
 @starting-style{dialog.viewer[open]{opacity:0}}
 dialog.viewer:not([open]){opacity:0}
-dialog.viewer[open]{display:grid;grid-template-columns:minmax(0,1fr) min(440px,38vw)}
-.stage{display:flex;align-items:center;justify-content:center;padding:clamp(18px,4vw,56px);min-height:0}
-.stage .mount{padding:clamp(10px,1.4vw,18px);max-height:100%;display:flex}
-.stage .zoom{display:flex;cursor:zoom-in}
+dialog.viewer[open]{display:grid;grid-template-columns:minmax(0,1fr) min(440px,38vw);grid-template-rows:minmax(0,1fr)}
+.stage{display:flex;align-items:center;justify-content:center;padding:clamp(18px,4vw,56px);min-height:0;container-type:size;--iw:min(calc(100cqw / 1.11),calc(100cqh / (1 / var(--ar,1) + .11)))}
+.stage .mount{padding:calc(var(--iw) * .055);display:block}
+.stage .zoom{display:block;cursor:zoom-in}
 .full-link{margin:14px 0 0;font:500 13px/1 var(--sans);letter-spacing:.04em}.full-link a{text-decoration:none;border-bottom:1px solid var(--line);padding-bottom:4px}
-.stage img{max-width:100%;max-height:calc(100dvh - 2*clamp(18px,4vw,56px) - 2*clamp(10px,1.4vw,18px));width:auto;height:auto;object-fit:contain}
+.stage img{display:block;width:var(--iw);height:auto;aspect-ratio:var(--ar,1)}
 .panel{overflow:hidden;min-height:0;max-height:100dvh;padding:clamp(28px,4vw,56px) clamp(22px,3vw,44px);border-left:1px solid var(--line);background:color-mix(in srgb,var(--paper) 88%,transparent);display:flex;flex-direction:column}
 .panel h3{font:400 clamp(30px,3vw,40px)/1.1 var(--serif);margin:4px 0 22px}
 .panel .stmt{flex:1 1 auto;min-height:0;overflow:auto;overscroll-behavior:contain;padding-right:6px;margin-right:-6px}
@@ -118,9 +118,15 @@ dialog.viewer[open]{display:grid;grid-template-columns:minmax(0,1fr) min(440px,3
 .close{position:absolute;top:14px;right:16px;z-index:2;font:300 30px/1 var(--sans);color:var(--ink);background:none;border:0;cursor:pointer;width:44px;height:44px;border-radius:50%}
 .close:hover{color:var(--accent)}
 @media (max-width:860px){dialog.viewer[open]{grid-template-columns:1fr;grid-template-rows:auto auto;overflow:auto}
-.stage{min-height:auto}.stage .mount,.stage .zoom{display:block;max-height:none}.stage img{display:block;width:auto;max-width:100%;max-height:70dvh;margin:0 auto}
+.stage{min-height:auto;container-type:inline-size;--iw:min(calc(100cqw / 1.11),calc(70dvh / (1 / var(--ar,1) + .11)))}
 .panel .stmt.more{mask-image:none;-webkit-mask-image:none}.panel{display:block;min-height:auto;border-left:0;border-top:1px solid var(--line);overflow:visible;max-height:none}.panel .stmt{overflow:visible;flex:none;margin-right:0;padding-right:0}}
-::view-transition-old(work),::view-transition-new(work){animation-duration:.42s;animation-timing-function:cubic-bezier(.2,.7,.2,1)}
+::view-transition-group(*){animation-duration:.46s;animation-timing-function:cubic-bezier(.2,0,0,1)}
+::view-transition-old(root){animation:vt-out .2s cubic-bezier(.4,0,1,1) both}
+::view-transition-new(root){animation:vt-in .32s cubic-bezier(0,0,.2,1) .14s both}
+@keyframes vt-out{to{opacity:0}}@keyframes vt-in{from{opacity:0}}
+::view-transition-old(work),::view-transition-new(work){animation:none;mix-blend-mode:normal;width:100%;height:100%}
+html.closing::view-transition-new(work){opacity:0}
+html.vt dialog.viewer,html.vt dialog.viewer::backdrop{transition:none}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
 </style>
 </head>
@@ -247,6 +253,7 @@ please share them with credit, unaltered and non-commercially. Images and licenc
   const works = JSON.parse(document.getElementById("works").textContent);
   const byId = new Map(works.map((w, i) => [w.id, i]));
   const dlg = document.querySelector("dialog.viewer");
+  const root = document.documentElement;
   const $ = (s) => dlg.querySelector(s);
   // The viewer's image element is created here, so the page never ships an image tag without a source.
   const img = document.createElement("img");
@@ -261,7 +268,7 @@ please share them with credit, unaltered and non-commercially. Images and licenc
   $(".stage .mount").append(zoom);
   let cur = -1;
 
-  function fill(i) {
+  function fill(i, placeholder) {
     const w = works[i];
     cur = i;
     $(".eyebrow").textContent = w.seriesLabel + " · " + w.seriesTitle + " · No. " + w.n;
@@ -294,13 +301,11 @@ please share them with credit, unaltered and non-commercially. Images and licenc
     zoom.href = w.image;
     zoom.setAttribute("aria-label", w.title + ": open full size in a new tab");
     $(".full").href = w.image;
-    // Show the thumbnail at once, then swap in the full image when it has decoded.
-    img.src = w.thumb;
-    if (w.image !== w.thumb) {
-      const full = new Image();
-      full.src = w.image;
-      full.decode().then(() => { if (cur === i) img.src = w.image; }).catch(() => {});
-    }
+    // The box comes from the work's proportions, so it never changes when a different file arrives.
+    img.width = w.w;
+    img.height = w.h;
+    dlg.style.setProperty("--ar", String(w.w / w.h));
+    img.src = placeholder || w.thumb;
     $(".panel").scrollTop = 0;
     $(".stmt").scrollTop = 0;
     requestAnimationFrame(cue);
@@ -313,21 +318,78 @@ please share them with credit, unaltered and non-commercially. Images and licenc
   $(".stmt").addEventListener("scroll", cue, { passive: true });
   window.addEventListener("resize", cue);
 
-  function open(i, from) {
-    const show = () => { fill(i); if (!dlg.open) dlg.showModal(); };
-    const thumb = !dlg.open && from && from.querySelector("img");
-    if (document.startViewTransition && thumb && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      thumb.style.viewTransitionName = "work";
-      const t = document.startViewTransition(() => { thumb.style.viewTransitionName = ""; img.style.viewTransitionName = "work"; show(); });
-      // A transition interrupted by another (fast arrow keys, a reload) is skipped: ready rejects, which is expected.
-      t.ready.catch(() => {});
-      t.finished.catch(() => {}).finally(() => { img.style.viewTransitionName = ""; });
-    } else show();
+  const motion = () => !!document.startViewTransition && !matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const settle = (p, ms) => Promise.race([p.catch(() => {}), new Promise((r) => setTimeout(r, ms))]);
+  const cardOf = (i) => document.querySelector('.card[data-id="' + CSS.escape(works[i].id) + '"]');
+  const loaded = (im) => !!im && im.complete && im.naturalWidth > 0;
+
+  // The full image replaces the placeholder only once decoded, and never while a transition is in flight.
+  function upgrade(i) {
+    const w = works[i];
+    if (w.image === w.thumb) return;
+    const full = new Image();
+    full.src = w.image;
+    full.decode().then(() => { if (cur === i) img.src = w.image; }).catch(() => {});
+  }
+
+  // Opening from a card flies its mat, with the drawing in it, to the viewer: one rigid object, because both mats are
+  // the same proportion of the drawing. The viewer starts from the exact image already on screen, decoded before the
+  // snapshot, so the target is never empty.
+  async function open(i, from) {
+    const grid = cardOf(i) && cardOf(i).querySelector("img");
+    const placeholder = loaded(grid) ? grid.currentSrc : null;
+    const thumb = !dlg.open && from ? from.querySelector("img") : null;
+    if (!loaded(thumb) || !motion()) {
+      fill(i, placeholder);
+      if (!dlg.open) dlg.showModal();
+      upgrade(i);
+      return;
+    }
+    new Image().src = works[i].image; // start fetching the full image during the flight
+    fill(i, placeholder);
+    await settle(img.decode(), 300);
+    const card = thumb.closest(".mount");
+    const stage = $(".stage .mount");
+    card.style.viewTransitionName = "work";
+    root.classList.add("vt");
+    const t = document.startViewTransition(() => {
+      card.style.viewTransitionName = "";
+      stage.style.viewTransitionName = "work";
+      dlg.showModal();
+    });
+    // A transition interrupted by another (fast keys, a reload) is skipped: ready rejects, which is expected.
+    t.ready.catch(() => {});
+    await t.finished.catch(() => {});
+    stage.style.viewTransitionName = "";
+    root.classList.remove("vt");
+    upgrade(i);
+  }
+
+  // Closing flies the work back into its place on the wall.
+  function shut() {
+    if (!dlg.open) return;
+    const c = cur >= 0 ? cardOf(cur) : null;
+    const card = c && c.querySelector(".mount");
+    if (!card || !loaded(card.querySelector("img")) || !motion()) { dlg.close(); return; }
+    const stage = $(".stage .mount");
+    stage.style.viewTransitionName = "work";
+    root.classList.add("vt", "closing");
+    const t = document.startViewTransition(() => {
+      stage.style.viewTransitionName = "";
+      dlg.close();
+      card.scrollIntoView({ block: "nearest", behavior: "instant" });
+      card.style.viewTransitionName = "work";
+    });
+    t.ready.catch(() => {});
+    t.finished.catch(() => {}).finally(() => {
+      card.style.viewTransitionName = "";
+      root.classList.remove("vt", "closing");
+    });
   }
 
   function route() {
     const id = decodeURIComponent(location.hash.replace(/^#\/?/, ""));
-    if (byId.has(id)) { if (!dlg.open || works[cur].id !== id) open(byId.get(id), document.querySelector('[data-id="' + CSS.escape(id) + '"]')); }
+    if (byId.has(id)) { if (!dlg.open || works[cur].id !== id) open(byId.get(id)); }
     else if (dlg.open) dlg.close();
   }
 
@@ -346,12 +408,13 @@ please share them with credit, unaltered and non-commercially. Images and licenc
   });
   $(".prev").addEventListener("click", () => go(-1));
   $(".next").addEventListener("click", () => go(1));
-  $(".close").addEventListener("click", () => dlg.close());
+  $(".close").addEventListener("click", shut);
+  dlg.addEventListener("cancel", (e) => { e.preventDefault(); shut(); });
   // Light dismiss: closedby="any" where supported; elsewhere, a click on the backdrop closes the viewer.
   if (!("closedBy" in HTMLDialogElement.prototype)) {
     dlg.addEventListener("click", (e) => {
       const r = dlg.getBoundingClientRect();
-      if (e.target === dlg && (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom)) dlg.close();
+      if (e.target === dlg && (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom)) shut();
     });
   }
   dlg.addEventListener("close", () => { if (location.hash) history.replaceState(null, "", location.pathname + location.search); });
