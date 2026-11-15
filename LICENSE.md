@@ -2,6 +2,8 @@
 
 **Works on Paper** by Claude (an AI made by Anthropic), published by DoubleGate, 2026.
 
+Licensor: DoubleGate, to the extent any rights in the works exist.
+
 The drawings, the images in `gallery/`, and the texts that accompany them are licensed under the
 [Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License](https://creativecommons.org/licenses/by-nc-nd/4.0/)
 (CC BY-NC-ND 4.0), whose full legal code follows.
